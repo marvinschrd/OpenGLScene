@@ -1,0 +1,154 @@
+# Blender MTL File: 'scene.blend'
+# Material Count: 11
+
+newmtl Material.001
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.122245 0.800000 0.082339
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -bm 1.300000 Egg\\drag1_Material_Normal.1001.png
+map_Kd Egg\\drag1_Material_BaseColor.1001.png
+map_Ns Egg\\drag1_Material_Roughness.1001.png
+refl Egg\\drag1_Material_Metallic.1001.png
+
+newmtl Material.002
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.122245 0.800000 0.082339
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -bm 1.700000 Egg\\drag1_Material_Normal.1001.png
+map_Kd Egg\\drag1_Material_BaseColor.1001.png
+map_Ns Egg\\drag1_Material_Roughness.1001.png
+refl Egg\\drag1_Material_Metallic.1001.png
+
+newmtl Материал
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.576880 0.002802
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -bm 0.200000 Egg\\jajko_Normal.png
+map_Kd Egg\\jajko_BaseColor.png
+map_Ns Egg\\jajko_Roughness.png
+refl C:Egg\\jajko_Metallic.png
+
+newmtl Материал.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.232824 0.178210
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Egg\\drag1_BaseColor.1001.png
+map_NsEgg\\drag1_Roughness.1001.png
+refl Egg\\drag1_Metallic.1001.png
+
+newmtl Материал.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.110921 0.096845 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -bm 1.100000 Egg\\drag1_.001_Normal.1001.png
+map_Kd Egg\\drag1_.001_BaseColor.1001.png
+map_Ns Egg\\drag1_.001_Roughness.1001.png
+refl Egg\\drag1_.001_Metallic.1001.png
+
+newmtl Материал.003
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.232824 0.178210
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Egg\\drag1_BaseColor.1001.png
+map_Ns Egg\\drag1_Roughness.1001.png
+refl Egg\\drag1_Metallic.1001.png
+
+newmtl Материал.004
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.110921 0.096845 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -bm 1.400000 Egg\\drag1_.001_Normal.1001.png
+map_Kd Egg\\drag1_.001_BaseColor.1001.png
+map_Ns Egg\\drag1_.001_Roughness.1001.png
+refl Egg\\drag1_.001_Metallic.1001.png
+
+newmtl Материал.006
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.761225 0.052164
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -bm 1.500000 Egg\\drag2_.002_Normal.png
+map_Kd Egg\\drag2_.002_BaseColor.png
+map_Ns Egg\\drag2_.002_Roughness.png
+refl Egg\\drag2_.002_Metallic.png
+
+newmtl Материал.007
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.761225 0.052164
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -bm 1.500000 Egg\\drag2_.002_Normal.png
+map_Kd Egg\\drag2_.002_BaseColor.png
+map_Ns Egg\\drag2_.002_Roughness.png
+refl Egg\\drag2_.002_Metallic.png
+
+newmtl Материал.008
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.761225 0.052164
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -bm 0.400000 Egg\\drag2_.002_Normal.png
+map_Kd Egg\\drag2_.002_BaseColor.png
+map_Ns Egg\\drag2_.002_Roughness.png
+refl Egg\\drag2_.002_Metallic.png
+
+newmtl Материал.009
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.761225 0.052164
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -bm 0.400000 Egg\\drag2_.002_Normal.png
+map_Kd Egg\\drag2_.002_BaseColor.png
+map_Ns Egg\\drag2_.002_Roughness.png
+refl Egg\\drag2_.002_Metallic.png

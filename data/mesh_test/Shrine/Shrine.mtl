@@ -1,0 +1,110 @@
+# Blender MTL File: 'None'
+# Material Count: 9
+
+newmtl floor
+Ns 179.999996
+Ka 1.000000 1.000000 1.000000
+Kd 0.057000 0.034033 0.024396
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Shrine\\Ground_Basecolour.tga.png
+map_Bump Shrine\\Ground_Normalmap.tga.png
+
+newmtl ivy12
+Ns 179.999996
+Ka 1.000000 1.000000 1.000000
+Kd 0.093473 0.144000 0.066528
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Shrine\\Tree_Ivy_Basecolour.tga.png
+map_Bump Shrine\\Tree_Ivy_Normalmap.tga.png
+
+newmtl lambert1
+Ns 179.999996
+Ka 1.000000 1.000000 1.000000
+Kd 0.500000 0.500000 0.500000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Shrine\\Tree_Ivy_Basecolour.tga.png
+map_Bump Shrine\\Tree_Ivy_Normalmap.tga.png
+
+newmtl lambert3
+Ns 179.999996
+Ka 1.000000 1.000000 1.000000
+Kd 0.847000 0.626399 0.182105
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Shrine\\Tree_Ivy_Basecolour.tga.png
+map_Bump Shrine\\Tree_Ivy_Normalmap.tga.png
+
+newmtl lambert5
+Ns 179.999996
+Ka 1.000000 1.000000 1.000000
+Kd 0.097000 0.047500 0.032100
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Shrine\\Tree_Ivy_Basecolour.tga.png
+map_Bump Shrine\\Tree_Ivy_Normalmap.tga.png
+
+newmtl lambert7
+Ns 179.999996
+Ka 1.000000 1.000000 1.000000
+Kd 0.298000 0.253949 0.195190
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Shrine\\Tree_Ivy_Basecolour.tga.png
+map_Bump Shrine\\Tree_Ivy_Normalmap.tga.png
+
+newmtl orb
+Ns 179.999996
+Ka 0.500000 0.500000 0.500000
+Kd 1.000000 0.736896 0.207000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd Shrine\\Tree_Ivy_Basecolour.tga.png
+map_Bump Shrine\\Tree_Ivy_Normalmap.tga.png
+
+newmtl pottery
+Ns 179.999996
+Ka 1.000000 1.000000 1.000000
+Kd 0.479000 0.267464 0.155196
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Shrine\\Tree_Ivy_Basecolour.tga.png
+map_Bump Shrine\\Tree_Ivy_Normalmap.tga.png
+
+newmtl wire
+Ns 179.999996
+Ka 0.500000 0.500000 0.500000
+Kd 0.077000 0.062442 0.057904
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd Shrine\\Tree_Ivy_Basecolour.tga.png
+map_Bump Shrine\\Tree_Ivy_Normalmap.tga.png

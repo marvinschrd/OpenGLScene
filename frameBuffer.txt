@@ -1,0 +1,359 @@
+#include <SDL_main.h>
+#include <glad/glad.h>
+#include <array>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "engine.h"
+#include "camera.h"
+#include "texture.h"
+#include "shader.h"
+#include "mesh.h"
+#include "material.h"
+#include"modele.h"
+
+namespace gl {
+
+	class HelloTransform : public Program
+	{
+	public:
+		void Init() override;
+		void Update(seconds dt, SDL_Window* window) override;
+		void Destroy() override;
+		void OnEvent(SDL_Event& event) override;
+		void DrawImGui() override;
+
+	protected:
+		void SetModelMatrix(seconds dt);
+		void SetViewMatrix(seconds dt);
+		void SetProjectionMatrix();
+		void IsError(const std::string& file, int line) const;
+		void SetUniformMatrix() const;
+
+		unsigned int VAO_;
+		unsigned int VBO_;
+		unsigned int EBO_;
+		unsigned int vertex_shader_;
+		unsigned int fragment_shader_;
+		unsigned int fbo_;
+
+		//Quad
+		unsigned int quadVAO_;
+		unsigned int quadVBO_;
+		
+		//unsigned int program_;
+
+		float time_ = 0.0f;
+		float delta_time_ = 0.0f;
+
+		//camera use variables
+		glm::vec2 windowSize_;
+		glm::vec2 windowCenter_;
+		bool firstMouse = true;
+		float lastX;
+		float lastY;
+		float fov_ = 45.0f;
+
+		std::unique_ptr<Meshe> mesh_;
+		std::unique_ptr<Modele> modele_;
+
+		std::unique_ptr<Camera> camera_ = nullptr;
+		std::unique_ptr<Texture> texture_diffuse_ = nullptr;
+		std::unique_ptr<Texture> texture_specular_ = nullptr;
+		std::unique_ptr<Texture> texture_diffuse_2_ = nullptr;
+		std::unique_ptr<Shader> shaders_ = nullptr;
+		std::unique_ptr<Shader> screenShader_ = nullptr;
+		unsigned int textureColorBuffer_;
+
+		glm::mat4 model_ = glm::mat4(1.0f);
+		glm::mat4 inv_model_ = glm::mat4(1.0f);
+		glm::mat4 view_ = glm::mat4(1.0f);
+		glm::mat4 projection_ = glm::mat4(1.0f);
+	};
+
+	void HelloTransform::IsError(const std::string& file, int line) const
+	{
+		auto error_code = glGetError();
+		if (error_code != GL_NO_ERROR)
+		{
+			std::cerr
+				<< error_code
+				<< " in file: " << file
+				<< " at line: " << line
+				<< "\n";
+		}
+	}
+
+	void HelloTransform::Init()
+	{
+		glEnable(GL_DEPTH_TEST);
+		/*glm::vec2 windowSize = window();
+		std::cout << "window size x = " << windowSize.x << "\n";*/
+
+		std::array<float, 32> vertices = {
+			-0.5f, -0.5f, 0.0f, 1.0, 0.0, 1.0, 0.0, 0.0,
+			 0.5f, -0.5f, 0.0f, 0.0, 1.0, 1.0, 1.0, 0.0,
+			-0.5f,  0.5f, 0.0f, 0.0, 0.0, 1.0, 0.0, 1.0,
+			 0.5f,  0.5f, 0.0f, 1.0, 0.0, 1.0, 1.0, 1.0
+		};
+
+		std::array<std::uint32_t, 6> indices{
+			0, 1, 2,
+			1, 2, 3
+		};
+
+		float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+		// positions   // texCoords
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		-1.0f, -1.0f,  0.0f, 0.0f,
+		 1.0f, -1.0f,  1.0f, 0.0f,
+
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		 1.0f, -1.0f,  1.0f, 0.0f,
+		 1.0f,  1.0f,  1.0f, 1.0f
+		};
+
+		glGenVertexArrays(1, &quadVAO_);
+		glGenBuffers(1, &quadVBO_);
+		glBindVertexArray(quadVAO_);
+		glBindBuffer(GL_ARRAY_BUFFER, quadVBO_);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
+		
+		camera_ = std::make_unique<Camera>(glm::vec3(0.0f, 10.0f, 20.0f));
+
+
+		// Framebuffer
+		glGenFramebuffers(1, &fbo_);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo_);
+
+		// framebuffer texture
+		glGenTextures(1, &textureColorBuffer_);
+		glBindTexture(GL_TEXTURE_2D, textureColorBuffer_);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 800, 600, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorBuffer_, 0);
+
+		// rbo
+		unsigned int rbo;
+		glGenRenderbuffers(1, &rbo);
+		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 800, 600);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		{
+			assert("Framebuffer incomplete");
+		}
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			// execute victory dance
+
+
+
+
+		
+
+		std::string path = "../";
+
+		//mesh_ = std::make_unique<Mesh>(path + "data/mesh/godzilla.obj");
+		modele_ = std::make_unique<Modele>(path + "data/mesh_test/Zelda_and_Link.obj");
+		//modele_ = std::make_unique<Model>(path + "data/mesh/razor_crest.obj");
+
+
+		/*texture_diffuse_ = std::make_unique<Texture>(
+			path + "data/textures/hello_mesh/skin.png");
+		texture_diffuse_2_ = std::make_unique<Texture>(
+			path + "data/textures/hello_mesh/emission.png");
+		texture_specular_ = std::make_unique<Texture>(
+			path + "data/textures/hello_mesh/godzilla_specular.png");*/
+
+		shaders_ = std::make_unique<Shader>(
+			path + "data/shaders/hello_mesh/meshShader.vert",
+			path + "data/shaders/hello_mesh/meshShader.frag");
+
+		screenShader_ = std::make_unique<Shader>(
+			path + "data/shaders/fbShader.vert",
+			path + "data/shaders/fbShader.frag");
+
+		// Bind uniform to program.
+
+
+		//glClearColor(0.2f, 0.2f, 0.2f, 0.2f);
+		IsError(__FILE__, __LINE__);
+	}
+
+	void HelloTransform::SetModelMatrix(seconds dt)
+	{
+		model_ = glm::rotate(glm::mat4(1.0f), time_, glm::vec3(0.f, 1.f, 0.f));
+		inv_model_ = glm::transpose(glm::inverse(model_));
+	}
+
+	void HelloTransform::SetViewMatrix(seconds dt)
+	{
+		view_ = camera_->GetViewMatrix();
+	}
+
+	void HelloTransform::SetProjectionMatrix()
+	{
+		//projection_ = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
+		projection_ = glm::perspective(glm::radians(fov_), 4.0f / 3.0f, 0.1f, 100.f);
+	}
+
+	void HelloTransform::SetUniformMatrix() const
+	{
+		shaders_->Use();
+		shaders_->SetMat4("model", model_);
+		shaders_->SetMat4("view", view_);
+		shaders_->SetMat4("projection", projection_);
+		shaders_->SetMat4("inv_model", inv_model_);
+		shaders_->SetVec3("camera_pos", camera_->position);
+	}
+
+	void HelloTransform::Update(seconds dt, SDL_Window* window)
+	{
+		int x;
+		int y;
+		SDL_GetWindowSize(window, &x, &y);
+		windowSize_ = glm::vec2(x, y);
+		windowCenter_ = glm::vec2(windowSize_.x / 2, windowSize_.y / 2);
+		delta_time_ = dt.count();
+		time_ += delta_time_;
+		SetViewMatrix(dt);
+		SetModelMatrix(dt);
+		SetProjectionMatrix();
+		SetUniformMatrix();
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		IsError(__FILE__, __LINE__);
+		//modele_->Draw();
+
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo_);
+		glEnable(GL_DEPTH_TEST);
+		glClearColor(0.2f, 0.2f, 0.2f, 0.2f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		for (Meshe mesh : modele_->meshes)
+		{
+
+			mesh.Bind();
+			//modele_->materials[mesh.material_index_].color.Bind(0);
+			auto& material = modele_->materials[mesh.material_index_];
+			shaders_->Use();
+			material.color.Bind(0);
+			shaders_->SetInt("textureDiffuse", 0);
+
+			//modele_->materials[mesh.material_index_].specular.Bind(1);
+			material.specular.Bind(1);
+			shaders_->SetInt("textureSpecular", 1);
+
+			glDrawElements(GL_TRIANGLES,
+				mesh.nb_vertices_, GL_UNSIGNED_INT, 0);
+			glBindVertexArray(0);
+		}
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glDisable(GL_DEPTH_TEST);
+		glClearColor(0.2f, 0.2f, 0.2f, 0.2f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		screenShader_->Use();
+		glBindVertexArray(quadVAO_);
+		glBindTexture(GL_TEXTURE_2D, textureColorBuffer_);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	}
+
+	void HelloTransform::Destroy()
+	{
+	}
+
+	void HelloTransform::OnEvent(SDL_Event& event)
+	{
+		if (event.type == SDL_KEYDOWN)
+		{
+			if (event.key.keysym.sym == SDLK_ESCAPE)
+				exit(0);
+			if (event.key.keysym.sym == SDLK_w)
+			{
+				camera_->ProcessKeyboard(CameraMovementEnum::FORWARD, delta_time_);
+			}
+			if (event.key.keysym.sym == SDLK_s)
+			{
+				camera_->ProcessKeyboard(CameraMovementEnum::BACKWARD, delta_time_);
+			}
+			if (event.key.keysym.sym == SDLK_a)
+			{
+				camera_->ProcessKeyboard(CameraMovementEnum::LEFT, delta_time_);
+			}
+			if (event.key.keysym.sym == SDLK_d)
+			{
+				camera_->ProcessKeyboard(CameraMovementEnum::RIGHT, delta_time_);
+			}
+		}
+
+		if (event.type == SDL_MOUSEMOTION)
+		{
+			int x;
+			int y;
+			SDL_GetMouseState(&x, &y);
+
+			if (firstMouse)
+			{
+				lastX = x;
+				lastY = y;
+				firstMouse = false;
+			}
+
+			//std::cout << "x mouse offset = " << x << "\n";
+
+			float currX = event.motion.x;
+			float currY = event.motion.y;
+
+			/*float xOffset = x - lastX;
+			float yOffset = lastY - y;*/
+
+			float xOffset = currX - lastX;
+			float yOffset = lastY - currY;
+
+			lastX = currX;
+			lastY = currY;
+
+			camera_->ProcessMouseMovement(xOffset, yOffset, time_);
+		}
+
+		if (event.type == SDL_MOUSEWHEEL)
+		{
+			fov_ -= event.wheel.y;
+			if (fov_ < 1.0f)
+				fov_ = 1.0f;
+			if (fov_ > 45.0f)
+				fov_ = 45.0f;
+		}
+	}
+
+	void HelloTransform::DrawImGui()
+	{
+
+	}
+
+
+
+
+} // End namespace gl.
+
+int main(int argc, char** argv)
+{
+	gl::HelloTransform program;
+	gl::Engine engine(program);
+	engine.Run();
+	return EXIT_SUCCESS;
+}

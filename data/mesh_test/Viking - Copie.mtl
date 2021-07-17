@@ -1,0 +1,133 @@
+# Blender MTL File: 'None'
+# Material Count: 10
+
+newmtl 01___Default
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ks Viking//Belt_Spec.jpg
+map_Kd Viking//Belt_Diff.jpg
+map_Bump Viking//Belt_Norm.jpg
+
+
+newmtl 02___Default
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Viking//Axe_Diff.jpg
+map_Ks Viking//Axe_Spec.jpg
+map_Bump Viking//Axe_Norm.jpg
+
+newmtl 03___Default
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Viking//Boot_Diff.jpg
+map_Ks Viking//Boot_Spec.jpg
+map_Bump Viking//Boot_Norm.jpg
+
+newmtl 04___Default
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Viking//Char_Diffuse.jpg
+map_Ks Viking//Char_Spec.jpg
+map_Bump Viking//Char_Norm.jpg
+
+newmtl 05___Default
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Viking//Armband_Diff.jpg
+map_Ks Viking//Armband_Spec.jpg
+map_Bump Viking//Armband_Norm.jpg
+
+newmtl 07___Default
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Viking//Collar_Diff.jpg
+map_Ks Viking//Collar_Spec.jpg
+map_Bump Viking//Collar_Norm.jpg
+
+newmtl 08___Default
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Viking//Gauntlet_Diff.jpg
+map_Ks Viking//Gauntlet_Spec.jpg
+map_Bump Viking//Gauntlet_Norm.jpg
+
+newmtl 09___Default
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Viking//Leg_Diff.jpg
+map_Ks Viking//Leg_Spec.jpg
+map_Bump Viking//Leg_Norm.jpg
+
+newmtl 10___Default
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Viking//Shield_Diffuse.jpg
+map_Ks Viking//Shield_Spec.jpg
+map_Bump Viking//Shield_Norm.jpg
+
+newmtl wire_008008136
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Viking//Shoulder_Diff.jpg
+map_Ks Viking//Shoulder_Spec.jpg
+map_Bump Viking//Shoulder_Norm.jpg

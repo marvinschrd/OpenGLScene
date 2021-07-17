@@ -1,0 +1,55 @@
+# Blender MTL File: 'None'
+# Material Count: 4
+
+newmtl tree1
+Ns 95.004585
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -o 0.000000 -1.000000 0.000000 bigTree\\tree1Normal.png
+map_Kd -o 0.000000 -1.000000 0.000000 bigTree\\tree1Color.png
+map_Ks -o 0.000000 -1.000000 0.000000 bigTree\\tree1Smoothness.png
+
+newmtl tree2
+Ns 95.004585
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -o 0.000000 -1.000000 0.000000 bigTree\\tree2Normal.png
+map_Kd -o 0.000000 -1.000000 0.000000 bigTree\\tree2color.png
+map_Ks -o 0.000000 -1.000000 0.000000 bigTree\\tree2Smoothness.png
+
+newmtl tree3
+Ns 88.642406
+Ka 0.050000 0.050000 0.050000
+Kd 0.800000 0.800000 0.800000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Bump -o 0.000000 -1.000000 0.000000 bigTree\\tree3Normal.png
+map_Kd -o 0.000000 -1.000000 0.000000 bigTree\\tree3Color.png
+map_Ks -o 0.000000 -1.000000 0.000000 bigTree\\tree3Smoothness.png
+refl -o 0.000000 -1.000000 0.000000 bigTree\\tree3Smoothness.png
+
+newmtl tree4
+Ns 77.167677
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -o 0.000000 -1.000000 0.000000 bigTree\\tree4Normal.png
+map_Kd -o 0.000000 -1.000000 0.000000 bigTree\\tree4Color.png
+map_Ks -o 0.000000 -1.000000 0.000000 bigTree\\tree4Smoothness.png
