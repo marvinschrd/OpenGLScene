@@ -1,0 +1,17 @@
+# Blender MTL File: 'None'
+# Material Count: 1
+
+newmtl portal
+Ns 287.999996
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 1.000000 0.900000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Bump -o 0.000000 -1.000000 0.000000 portal\\portalNormal.png
+map_Kd -o 0.000000 -1.000000 0.000000 portal\\portalcolor.png
+map_Ke -o 0.000000 -1.000000 0.000000 portal\\portaemmision.png
+map_Ks -o 0.000000 -1.000000 0.000000 portal\\portalspecular.png
+refl -o 0.000000 -1.000000 0.000000 portal\\portalspecular.png

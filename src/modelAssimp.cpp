@@ -101,8 +101,13 @@ namespace gl
 			textures.insert(textures.end(), specularTextures.begin(), specularTextures.end());
 			std::vector<TextureAssimp> normalMap = LoadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
 			textures.insert(textures.end(), normalMap.begin(), normalMap.end());
+			
+			//every material load an emissive texture even when they don't have one so there is a problem
+			/*std::vector<TextureAssimp> emissionMap = LoadMaterialTextures(material, aiTextureType_EMISSIVE, "texture_emission");
+			textures.insert(textures.end(), emissionMap.begin(), emissionMap.end());*/
 
 		}
+
 		
 		return Mesh(vertices, indices, textures);
 	}

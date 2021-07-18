@@ -4,25 +4,33 @@ layout(location = 0) out vec4 FragColor;
 
 in vec2 out_tex;
 in vec3 out_normal;
+in vec3 out_position;
+in vec3 pointLight_Position;
 in vec3 tangentFragPos;
 in vec3 tangentLightDirection;
+in vec3 tangentLightPos;
 in vec3 tangentViewPos;
 in vec4 fragPosLightSpace;
 
 uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_specular1;
 uniform sampler2D texture_normal1;
+uniform sampler2D texture_emission1;
 uniform sampler2D shadowMap;
 
-const float ambient_strengh = 0.3;
+uniform float constant;
+uniform float linear;
+uniform float quadratic;
+
+const float ambient_strengh = 0.1f;
 const float specular_strength = 0.8;
 const float specular_pow = 256;
-const vec3 light_color = vec3(1.0, 1.0, 1.0);
-const vec3 light_color2 = vec3(1.0, 1.0, 1.0);
+const vec3 light_color = vec3(1,1, 1);
+const vec3 light_color2 = vec3(500,128,0);
 
 float ShadowCalculations(vec4 fragPosLightSpace)
 {
-    float bias = max(0.01 * (1.0 - dot(out_normal, tangentLightDirection)), 0.005);
+    float bias = max(0.001f * (1.0 - dot(out_normal, tangentLightDirection)), 0.0005f);
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
@@ -52,36 +60,111 @@ float ShadowCalculations(vec4 fragPosLightSpace)
     return shadow;
 }
 
-void main()
+vec3 calculateDiractionalLight(vec3 normal, vec3 viewDir, float shadow)
 {
     vec3 color = texture(texture_diffuse1,out_tex).rgb;
-    // Compute ambiant light.
-    //vec3 ambient = ambient_strengh * light_color;
-     vec3 ambient = ambient_strengh * color;
+    vec3 ambient = ambient_strengh * color;
 
-    // Compute diffuse light
-    vec3 normal = texture(texture_normal1, out_tex).rgb;
-    normal = normalize(normal*2.0-1.0);
-
-   // vec3 light_direction = normalize(tangentLightPos - tangentFragPos);
     vec3 light_direction = tangentLightDirection;
-    vec3 viewDir = normalize(tangentViewPos - tangentFragPos);
+    viewDir = normalize(tangentViewPos - tangentFragPos);
     float diff = max(dot(normal, light_direction), 0.0);
     vec3 diffuse = diff * light_color;
-    
-    // Compute specular light.
+
+     // Compute specular light.
+    vec3 reflection_direction = reflect(-light_direction,normal);
+    vec3 halfWayDir = normalize(light_direction + viewDir);
+    float spec = pow(max(dot(normal, halfWayDir), 0.0), specular_pow);
+    vec3 specular = specular_strength * spec * light_color;
+
+    //emission light
+//    vec3 emission = texture(texture_emission1, out_tex).rgb;
+
+    vec3 result = (ambient +(1.0-shadow) * (diffuse + specular)) * color;
+
+    vec3 result_specular =
+       specular * texture(texture_specular1, out_tex).r;
+
+    result +=result_specular;
+
+    return result;
+}
+
+vec3 CalculatePointLight(vec3 normal, vec3 out_position, vec3 viewDir, float shadow)
+{
+    vec3 color = texture(texture_diffuse1,out_tex).rgb;
+     // Compute ambient light.
+    vec3 ambient = ambient_strengh * color * light_color2;
+
+    vec3 light_direction = normalize(tangentLightPos - tangentFragPos);
+    //vec3 light_direction = tangentLightPos;
+    float diff = max(dot(normal, light_direction), 0.0);
+    vec3 diffuse = diff * light_color2;
+
+
     vec3 reflection_direction = reflect(-light_direction,normal);
     vec3 halfWayDir = normalize(light_direction + viewDir);
     float spec = pow(max(dot(normal, halfWayDir), 0.0), specular_pow);
     vec3 specular = specular_strength * spec * light_color2;
 
+    // atenuation
+    float distance    = length(pointLight_Position - out_position);
+    float attenuation = 1.0 / (constant + linear * distance + 
+    		    quadratic * (distance * distance));
+
+    ambient  *= attenuation;  
+    diffuse   *= attenuation;
+    specular *= attenuation; 
+
+//    float distance = length(out_position - pointLight_Position);
+//    diffuse *= 1.0 / (distance * distance);
+
+    //emission light
+    vec3 emission = texture(texture_emission1, out_tex).rgb;
+
+    vec3 lighting = (ambient +(1.0-shadow) * (diffuse + specular) + emission) * color;
+
+    vec3 result_specular =
+       specular * texture(texture_specular1, out_tex).r;
+
+     lighting +=result_specular;
+
+    return lighting;
+}
+
+void main()
+{
+    vec3 normal = texture(texture_normal1, out_tex).rgb;
+    normal = normalize(normal*2.0-1.0);
+    vec3 viewDir = normalize(tangentViewPos - tangentFragPos);
+    float shadow  = ShadowCalculations(fragPosLightSpace);
+
+//    vec3 color = texture(texture_diffuse1,out_tex).rgb;
+//    // Compute ambiant light.
+//    //vec3 ambient = ambient_strengh * light_color;
+//     vec3 ambient = ambient_strengh * color;
+//
+//    // Compute diffuse light
+//
+//    vec3 light_direction = tangentLightDirection;
+//    float diff = max(dot(normal, light_direction), 0.0);
+//    vec3 diffuse = diff * light_color;
+//    
+//    // Compute specular light.
+//    vec3 reflection_direction = reflect(-light_direction,normal);
+//    vec3 halfWayDir = normalize(light_direction + viewDir);
+//    float spec = pow(max(dot(normal, halfWayDir), 0.0), specular_pow);
+//    vec3 specular = specular_strength * spec * light_color2;
+
+    vec3 result = calculateDiractionalLight(normal,viewDir,shadow);
+    result += CalculatePointLight(normal,out_position,viewDir,shadow);
+
     // Final lighting.
 //    vec3 result_diffuse_ambient = 
 //        (ambient + diffuse + specular) * texture(texture_diffuse1, out_tex).rgb; 
-    float shadow  = ShadowCalculations(fragPosLightSpace);
-     vec3 result_specular =
-        specular * texture(texture_specular1, out_tex).r;
-    vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;
+//     vec3 result_specular =
+//        specular * texture(texture_specular1, out_tex).r;
+//    vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;
    
-    FragColor = vec4(lighting + result_specular, texture(texture_diffuse1, out_tex).a);
+   // FragColor = vec4(lighting + result_specular, texture(texture_diffuse1, out_tex).a);
+   FragColor = vec4(result, texture(texture_diffuse1, out_tex).a);
 }

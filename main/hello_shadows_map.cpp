@@ -63,7 +63,7 @@ namespace gl {
 		std::unique_ptr<Texture> texture_diffuse_ = nullptr;
 		std::unique_ptr<Texture> texture_specular_ = nullptr;
 		std::unique_ptr<Texture> texture_diffuse_2_ = nullptr;
-		std::unique_ptr<Shader> wallSahders_ = nullptr;
+		std::unique_ptr<Shader> generalShaders_ = nullptr;
 		std::unique_ptr<Shader> skyboxShaders_ = nullptr;
 		std::unique_ptr<Shader> simpleDepthShaders_ = nullptr;
 		std::unique_ptr<Shader> hdrShaders_ = nullptr;
@@ -188,11 +188,11 @@ namespace gl {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		CheckError(__FILE__, __LINE__);
 
-		wallSahders_ = std::make_unique<Shader>(
+		generalShaders_ = std::make_unique<Shader>(
 			path + "data/shaders/hello_shadows/shadow.vert",
 			path + "data/shaders/hello_shadows/shadow.frag");
-		wallSahders_->Use();
-		wallSahders_->SetInt("shadowMap", 4);
+		generalShaders_->Use();
+		generalShaders_->SetInt("shadowMap", 4);
 		//shaders_->SetInt("skybox", 0);
 
 		skyboxShaders_ = std::make_unique<Shader>(
@@ -223,12 +223,12 @@ namespace gl {
 
 	void HelloSkybox::SetUniformMatrix() const
 	{
-		wallSahders_->Use();
-		wallSahders_->SetMat4("model", model_);
-		wallSahders_->SetMat4("view", view_);
-		wallSahders_->SetMat4("projection", projection_);
-		wallSahders_->SetMat4("inv_model", inv_model_);
-		wallSahders_->SetVec3("cameraPosition", camera_->position);
+		generalShaders_->Use();
+		generalShaders_->SetMat4("model", model_);
+		generalShaders_->SetMat4("view", view_);
+		generalShaders_->SetMat4("projection", projection_);
+		generalShaders_->SetMat4("inv_model", inv_model_);
+		generalShaders_->SetVec3("cameraPosition", camera_->position);
 	}
 
 	void HelloSkybox::Update(seconds dt, SDL_Window* window)
@@ -284,21 +284,21 @@ namespace gl {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		wallSahders_->Use();
+		generalShaders_->Use();
 		SetViewMatrix(dt);
 		SetProjectionMatrix();
-		wallSahders_->SetMat4("view", view_);
-		wallSahders_->SetMat4("projection", projection_);
-		wallSahders_->SetVec3("cameraPosition", camera_->position);
-		wallSahders_->SetVec3("lightPosition", light_position);
-		wallSahders_->SetVec3("lightDirection", light_Dir);
-		wallSahders_->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+		generalShaders_->SetMat4("view", view_);
+		generalShaders_->SetMat4("projection", projection_);
+		generalShaders_->SetVec3("cameraPosition", camera_->position);
+		generalShaders_->SetVec3("lightPosition", light_position);
+		generalShaders_->SetVec3("lightDirection", light_Dir);
+		generalShaders_->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 		glActiveTexture(GL_TEXTURE4);
-		wallSahders_->SetInt("shadowMap", 4);
+		generalShaders_->SetInt("shadowMap", 4);
 		glBindTexture(GL_TEXTURE_2D, depthMap);
 		glActiveTexture(GL_TEXTURE0);
 		
-		RenderScene(wallSahders_);
+		RenderScene(generalShaders_);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

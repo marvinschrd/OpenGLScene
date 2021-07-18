@@ -120,6 +120,8 @@ namespace gl
 		unsigned int diffuseNumber = 1;
 		unsigned int specularNumber = 1;
 		unsigned int normalNumber = 1;
+		unsigned int emissionNumber = 1;
+		
 		for (unsigned int i = 0; i < textures_.size(); ++i)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
@@ -139,6 +141,11 @@ namespace gl
 			{
 				//std::cout << " normal texture found" << "\n";
 				number = std::to_string(normalNumber++);
+			}
+			else if(name == "texture_emission")
+			{
+				//std::cout << " emission texture found" << "\n";
+				number = std::to_string(emissionNumber++);
 			}
 
 			//shader->SetFloat(("material." + name + number).c_str(), i);

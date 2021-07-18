@@ -61,12 +61,15 @@ namespace gl {
 		std::unique_ptr<Model> ground_;
 		std::unique_ptr<Model> bigTree_;
 		std::unique_ptr<Model> rock_;
+		std::unique_ptr<Model> portal_;
+		std::unique_ptr<Model> handStatue_;
+		std::unique_ptr<Model> fireSphere_;
 		std::unique_ptr<CubeMap> skybox_;
 
 		std::unique_ptr<Camera> camera_ = nullptr;
 		std::unique_ptr<Camera> depthCamera_ = nullptr;
 		std::unique_ptr<Texture> texture_diffuse_2_ = nullptr;
-		std::unique_ptr<Shader> wallSahders_ = nullptr;
+		std::unique_ptr<Shader> generalShaders_ = nullptr;
 		std::unique_ptr<Shader> skyboxShaders_ = nullptr;
 		std::unique_ptr<Shader> simpleDepthShaders_ = nullptr;
 		std::unique_ptr<Shader> hdrShaders_ = nullptr;
@@ -76,9 +79,11 @@ namespace gl {
 		glm::mat4 view_ = glm::mat4(1.0f);
 		glm::mat4 projection_ = glm::mat4(1.0f);
 
-		glm::vec3 light_position = glm::vec3(0.0, 0.0, 30.0);
-		glm::vec3 light_Dir = glm::normalize(glm::vec3(0, 25, 50) - glm::vec3(0.0,0.0,0.0));
-		glm::vec3 pointLight_position = glm::vec3(0.0, 0.0, 0.0);
+		//glm::vec3 light_position = glm::vec3(0.0, 0.0, 30.0);
+		glm::vec3 light_position = glm::vec3(0.0, 20.0, 30.0);
+		//glm::vec3 light_Dir = glm::normalize(glm::vec3(0, 25, 50) - glm::vec3(0.0,0.0,0.0));
+		glm::vec3 light_Dir = glm::normalize(light_position - glm::vec3(0.0, 0.0, 0.0));
+		glm::vec3 pointLight_position = glm::vec3(0.0, 20.0, 37.0);
 		
 		unsigned int depthMapFBO;
 		unsigned int depthMap;
@@ -158,6 +163,11 @@ namespace gl {
 		bigTree_ = std::make_unique<Model>(path + "data/mesh_test/Tree/bigTree.obj");
 		ground_ = std::make_unique<Model>(path + "data/mesh_test/Ground.obj");
 		rock_ = std::make_unique<Model>(path + "data/mesh_test/Rocks/rock.obj");
+		portal_ = std::make_unique<Model>(path + "data/mesh_test/portal.obj");
+		handStatue_ = std::make_unique<Model>(path + "data/mesh_test/handStatue.obj");
+		fireSphere_ = std::make_unique<Model>(path + "data/mesh_test/fireSphere.obj");
+		
+		
 		//house_ = std::make_unique<Model>(path + "data/mesh_test/House/house.obj");
 
 
@@ -209,11 +219,11 @@ namespace gl {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		CheckError(__FILE__, __LINE__);
 
-		wallSahders_ = std::make_unique<Shader>(
+		generalShaders_ = std::make_unique<Shader>(
 			path + "data/shaders/hello_shadows/shadow.vert",
 			path + "data/shaders/hello_shadows/shadow.frag");
-		wallSahders_->Use();
-		wallSahders_->SetInt("shadowMap", 4);
+		generalShaders_->Use();
+		generalShaders_->SetInt("shadowMap", 4);
 		//shaders_->SetInt("skybox", 0);
 
 		skyboxShaders_ = std::make_unique<Shader>(
@@ -244,12 +254,12 @@ namespace gl {
 
 	void HelloSkybox::SetUniformMatrix() const
 	{
-		wallSahders_->Use();
-		wallSahders_->SetMat4("model", modelMatrix_);
-		wallSahders_->SetMat4("view", view_);
-		wallSahders_->SetMat4("projection", projection_);
-		wallSahders_->SetMat4("inv_model", inv_model_);
-		wallSahders_->SetVec3("cameraPosition", camera_->position);
+		generalShaders_->Use();
+		generalShaders_->SetMat4("model", modelMatrix_);
+		generalShaders_->SetMat4("view", view_);
+		generalShaders_->SetMat4("projection", projection_);
+		generalShaders_->SetMat4("inv_model", inv_model_);
+		generalShaders_->SetVec3("cameraPosition", camera_->position);
 	}
 
 	void HelloSkybox::Update(seconds dt, SDL_Window* window)
@@ -260,8 +270,8 @@ namespace gl {
 		windowSize_ = glm::vec2(x, y);
 		delta_time_ = dt.count();
 		time_ += delta_time_;
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
+		light_Dir = glm::normalize(light_position - glm::vec3(0.0, 0.0, 0.0));
+
 		
 
 		/*glm::mat4 lightProjection, lightView;
@@ -305,27 +315,27 @@ namespace gl {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		wallSahders_->Use();
+		generalShaders_->Use();
 		SetViewMatrix(dt);
 		SetProjectionMatrix();
-		wallSahders_->SetMat4("view", view_);
-		wallSahders_->SetMat4("projection", projection_);
-		wallSahders_->SetVec3("cameraPosition", camera_->position);
-		wallSahders_->SetVec3("lightPosition", light_position);
-		wallSahders_->SetVec3("lightDirection", light_Dir);
-		wallSahders_->SetVec3("pointLightPosition", pointLight_position);
+		generalShaders_->SetMat4("view", view_);
+		generalShaders_->SetMat4("projection", projection_);
+		generalShaders_->SetVec3("cameraPosition", camera_->position);
+		generalShaders_->SetVec3("lightPosition", light_position);
+		generalShaders_->SetVec3("lightDirection", light_Dir);
+		generalShaders_->SetVec3("pointLightPosition", pointLight_position);
 		
-		wallSahders_->SetFloat("constant", 1.0f);
-		wallSahders_->SetFloat("linear", 0.09f);
-		wallSahders_->SetFloat("quadratic", 0.032f);
+		generalShaders_->SetFloat("constant", 1.0f);
+		generalShaders_->SetFloat("linear", 0.14f);
+		generalShaders_->SetFloat("quadratic", 0.07f);
 		
-		wallSahders_->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+		generalShaders_->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 		glActiveTexture(GL_TEXTURE4);
-		wallSahders_->SetInt("shadowMap", 4);
+		generalShaders_->SetInt("shadowMap", 4);
 		glBindTexture(GL_TEXTURE_2D, depthMap);
 		glActiveTexture(GL_TEXTURE0);
 		
-		RenderScene(wallSahders_);
+		RenderScene(generalShaders_);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -344,19 +354,20 @@ namespace gl {
 		Shaders->SetInt("shadowMap", 6);
 		glBindTexture(GL_TEXTURE_2D, depthMap);*/
 
-		modelMatrix_ = glm::mat4(1.0f);
+		/*modelMatrix_ = glm::mat4(1.0f);
 		modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(0.0f, 0.0f, -5.0f));
 		modelMatrix_ = glm::scale(modelMatrix_, glm::vec3(3.0f, 3.0f, 3.0f));
 		modelMatrix_ = glm::rotate(modelMatrix_, glm::radians(90.0f), glm::vec3(0.f, 1.f, 0.f));
 		inv_model_= glm::transpose(glm::inverse(modelMatrix_));
 		Shaders->SetMat4("model", modelMatrix_);
 		Shaders->SetMat4("inv_model", inv_model_);
-		modele_->Draw(Shaders);
+		modele_->Draw(Shaders);*/
 
 
 		modelMatrix_ = glm::mat4(1.0f);
-		modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(-1.0f, 0.0f, 0.0f));
+		modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(-1.0f, 0.0f, -30.0f));
 		modelMatrix_ = glm::rotate(modelMatrix_, glm::radians(90.0f), glm::vec3(0.f, 1.f, 0.f));
+		modelMatrix_ = glm::scale(modelMatrix_, glm::vec3(1.5f, 1.5f, 1.5f));
 		inv_model_ = glm::transpose(glm::inverse(modelMatrix_));
 		Shaders->SetMat4("model", modelMatrix_);
 		Shaders->SetMat4("inv_model", inv_model_);
@@ -372,8 +383,45 @@ namespace gl {
 		rock_->Draw(Shaders);
 
 		modelMatrix_ = glm::mat4(1.0f);
+		modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(0.0f, 0.0f, 18.0f));
+		//modelMatrix_ = glm::rotate(modelMatrix_, glm::radians(90.0f), glm::vec3(0.f, 1.f, 0.f));
+		modelMatrix_ = glm::scale(modelMatrix_, glm::vec3(1.5, 1.5f, 1.5f));
+		inv_model_ = glm::transpose(glm::inverse(modelMatrix_));
+		Shaders->SetMat4("model", modelMatrix_);
+		Shaders->SetMat4("inv_model", inv_model_);
+		portal_->Draw(Shaders);
+
+		modelMatrix_ = glm::mat4(1.0f);
+		modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(0.0f, 2.5f, 45.0f));
+		//modelMatrix_ = glm::rotate(modelMatrix_, glm::radians(90.0f), glm::vec3(0.f, 1.f, 0.f));
+		modelMatrix_ = glm::scale(modelMatrix_, glm::vec3(3, 3, 3));
+		inv_model_ = glm::transpose(glm::inverse(modelMatrix_));
+		Shaders->SetMat4("model", modelMatrix_);
+		Shaders->SetMat4("inv_model", inv_model_);
+		handStatue_->Draw(Shaders);
+
+		modelMatrix_ = glm::mat4(1.0f);
+		modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(0.0f, 20.0f, 37.0f));
+		modelMatrix_ = glm::rotate(modelMatrix_, time_, glm::vec3(0.f, 1.f, 0.f));
+		modelMatrix_ = glm::scale(modelMatrix_, glm::vec3(8, 8, 8));
+		inv_model_ = glm::transpose(glm::inverse(modelMatrix_));
+		Shaders->SetMat4("model", modelMatrix_);
+		Shaders->SetMat4("inv_model", inv_model_);
+		fireSphere_->Draw(Shaders);
+
+		modelMatrix_ = glm::mat4(1.0f);
+		modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(0.0f, 1.75f, 23.0f));
+		//modelMatrix_ = glm::rotate(modelMatrix_, glm::radians(90.0f), glm::vec3(0.f, 1.f, 0.f));
+		modelMatrix_ = glm::scale(modelMatrix_, glm::vec3(1.5, 1.5f, 1.5f));
+		inv_model_ = glm::transpose(glm::inverse(modelMatrix_));
+		Shaders->SetMat4("model", modelMatrix_);
+		Shaders->SetMat4("inv_model", inv_model_);
+		dragonEgg_->Draw(Shaders);
+
+		modelMatrix_ = glm::mat4(1.0f);
 		modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(0.0f, -0.1f, 0.0f));
 		//modelMatrix_ = glm::rotate(modelMatrix_, glm::radians(90.0f), glm::vec3(0.f, 1.f, 0.f));
+		modelMatrix_ = glm::scale(modelMatrix_, glm::vec3(1, 1.5f, 1.5f));
 		inv_model_ = glm::transpose(glm::inverse(modelMatrix_));
 		Shaders->SetMat4("model", modelMatrix_);
 		Shaders->SetMat4("inv_model", inv_model_);

@@ -1,0 +1,28 @@
+# Blender MTL File: 'cb0a1baf8f894a6c9108c336c8ad9aad.blend'
+# Material Count: 2
+
+newmtl mano
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.318539 0.318539 0.318539
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd handStatue\\mano_dif.png
+map_ks handStatue\\mano_spec.png
+map_Bump handStatue\\mano_nor.png
+
+newmtl plantas
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.318539 0.318539 0.318539
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd handStatue\\plants_dif.png
+map_ks handStatue\\plants_spec.png
+map_Bump handStatue\\plants_nor.png

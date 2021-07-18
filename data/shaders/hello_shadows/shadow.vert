@@ -8,7 +8,9 @@ layout(location = 5) in vec3 aTangent;
 out vec3 out_position;
 out vec3 out_normal;
 out vec2 out_tex;
+out vec3 pointLight_Position;
 out vec3 tangentLightDirection;
+out vec3 tangentLightPos;
 out vec3 tangentViewPos;
 out vec3 tangentFragPos;
 out vec4 fragPosLightSpace;
@@ -19,7 +21,7 @@ uniform mat4 view;
 uniform mat4 projection;
 uniform mat4 inv_model;
 uniform vec3 cameraPosition;
-uniform vec3 lightPosition;
+uniform vec3 pointLightPosition;
 uniform mat4 lightSpaceMatrix;
 uniform vec3 lightDirection;
 
@@ -28,6 +30,7 @@ void main()
 {
 //    vec3 lightPosition = vec3(0.0, 4.0, 25.0);
     out_position = vec3(model * vec4(aPos, 1.0));
+    pointLight_Position = pointLightPosition;
 
 
     //tangent TBN matrix
@@ -45,6 +48,7 @@ void main()
     //vec3 lightDirection = normalize(lightPosition - vec3(0,0,0));
    // vec3 lightDirection = normalize(lightPosition - aPos);
     tangentLightDirection = TBN * lightDirection;
+    tangentLightPos = TBN * pointLightPosition;
 
 
     mat4 pvm = projection * view * model;
