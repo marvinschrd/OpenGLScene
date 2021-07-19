@@ -127,6 +127,8 @@ namespace gl {
 			return glm::perspective(glm::radians(fov_), 4.0f / 3.0f, 0.1f, 100.f);
 		}
 
+		void MoveCamera(glm::vec3 possition, float newYaw, float newPitch);
+
 	private:
 		// calculates the front vector from the Camera's (updated) Euler Angles
 		void updateCameraVectors();

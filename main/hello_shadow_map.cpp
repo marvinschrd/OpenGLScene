@@ -280,7 +280,8 @@ namespace gl {
 		lightView = depthCamera_->GetViewMatrix();
 		lightSpaceMatrix = lightProjection * lightView;*/
 
-
+		//camera_->ProcessKeyboard(CameraMovementEnum::RIGHT, delta_time_*0.25f);
+		
 
 		
 		glm::mat4 light_Projection, light_View;
@@ -373,14 +374,14 @@ namespace gl {
 		Shaders->SetMat4("inv_model", inv_model_);
 		bigTree_->Draw(Shaders);
 
-		modelMatrix_ = glm::mat4(1.0f);
-		modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(0.0f, 2.0f, -15.0f));
-		//modelMatrix_ = glm::rotate(modelMatrix_, glm::radians(90.0f), glm::vec3(0.f, 1.f, 0.f));
-		modelMatrix_ = glm::scale(modelMatrix_, glm::vec3(4.0f, 4.0f, 4.0f));
-		inv_model_ = glm::transpose(glm::inverse(modelMatrix_));
-		Shaders->SetMat4("model", modelMatrix_);
-		Shaders->SetMat4("inv_model", inv_model_);
-		rock_->Draw(Shaders);
+		//modelMatrix_ = glm::mat4(1.0f);
+		//modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(0.0f, 2.0f, -15.0f));
+		////modelMatrix_ = glm::rotate(modelMatrix_, glm::radians(90.0f), glm::vec3(0.f, 1.f, 0.f));
+		//modelMatrix_ = glm::scale(modelMatrix_, glm::vec3(4.0f, 4.0f, 4.0f));
+		//inv_model_ = glm::transpose(glm::inverse(modelMatrix_));
+		//Shaders->SetMat4("model", modelMatrix_);
+		//Shaders->SetMat4("inv_model", inv_model_);
+		//rock_->Draw(Shaders);
 
 		modelMatrix_ = glm::mat4(1.0f);
 		modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(0.0f, 0.0f, 18.0f));
@@ -400,8 +401,11 @@ namespace gl {
 		Shaders->SetMat4("inv_model", inv_model_);
 		handStatue_->Draw(Shaders);
 
+		glm::vec3 spherePos(0.0f, 20.0f, 37.0f);
+		
+		
 		modelMatrix_ = glm::mat4(1.0f);
-		modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(0.0f, 20.0f, 37.0f));
+		modelMatrix_ = glm::translate(modelMatrix_, spherePos);
 		modelMatrix_ = glm::rotate(modelMatrix_, time_, glm::vec3(0.f, 1.f, 0.f));
 		modelMatrix_ = glm::scale(modelMatrix_, glm::vec3(8, 8, 8));
 		inv_model_ = glm::transpose(glm::inverse(modelMatrix_));
@@ -485,6 +489,11 @@ namespace gl {
 			{
 				camera_->ProcessKeyboard(CameraMovementEnum::RIGHT, delta_time_);
 			}
+
+			/*if(event.key.keysym.sym == SDLK_m)
+			{
+				camera_->MoveCamera(glm::vec3(0.0,40.0,0.0), -90,-89.0f);
+			}*/
 		}
 
 		if (event.type == SDL_MOUSEMOTION)

@@ -43,6 +43,20 @@ namespace gl
 		updateCameraVectors();
 	}
 
+	void Camera::MoveCamera(glm::vec3 possition, float newYaw, float newPitch)
+	{
+		position = possition;
+		yaw += newYaw;
+		pitch += newPitch;
+		if (pitch > 89.0f)
+			pitch = 89.0f;
+		if (pitch < -89.0f)
+			pitch = -89.0f;
+		updateCameraVectors();
+		yaw = YAW;
+		pitch = PITCH;
+	}
+
 	void Camera::updateCameraVectors()
 	{
 		// calculate the new front vector
