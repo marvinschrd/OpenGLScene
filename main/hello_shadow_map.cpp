@@ -11,7 +11,7 @@
 #include "camera.h"
 #include "modelAssimp.h"
 #include "cubeMap.h"
-#include "sceneObject.h"
+#include "random"
 
 namespace gl {
 
@@ -64,6 +64,8 @@ namespace gl {
 		std::unique_ptr<Model> portal_;
 		std::unique_ptr<Model> handStatue_;
 		std::unique_ptr<Model> fireSphere_;
+		std::unique_ptr<Model> grass_;
+		std::unique_ptr<Model> window_;
 		std::unique_ptr<CubeMap> skybox_;
 
 		std::unique_ptr<Camera> camera_ = nullptr;
@@ -105,6 +107,46 @@ namespace gl {
 			glm::vec3(-4.0,0.0,-20)
 		};
 
+		//instanced grass
+		const unsigned long maxGrassNmb_ = 100'000;
+		const unsigned long minGrassNmb_ = 1'000;
+		unsigned long instanceChunkSize_ = 1'000;
+		unsigned long grassNmb_ = 250;
+		std::vector<glm::vec3> grassPositions_;
+		unsigned int instanceVBO_ = 0;
+
+		float cameraTimer_ = 0.f;
+		bool hasMoved = false;
+		enum POSITION
+		{
+			FIRST_POSITION,
+			SECOND_POSITION,
+			THIRD_POSITION,
+			FOURTH_POSITION,
+			FIFTH_POSITION
+		};
+		POSITION CameraPosition_ = FIRST_POSITION;
+		std::array<glm::vec3, 5> cameraPositions_{
+			glm::vec3(45.0f,40.0f,35.0f),
+			glm::vec3(20,25,50),
+			glm::vec3(3,3.5f,40),
+			glm::vec3(-8.0f,20.0f,40.0f),
+			glm::vec3(26.0f,20.0f,8.0f),
+		};
+		std::array<float, 5> cameraYaws_{
+			-90.0f,
+			-35.0f,
+			-15.0f,
+			35.0f,
+			-120.0f
+		};
+		std::array<float, 5> cameraPtchs_{
+			-35.f,
+			-30.0f,
+			-5.0f,
+			-30.0f,
+			-20.0f
+		};
 		
 	};
 
@@ -144,8 +186,6 @@ namespace gl {
 			);
 
 		camera_ = std::make_unique<Camera>(glm::vec3(0.0f, 10.0f, 25.0f));
-		/*depthCamera_ = std::make_unique<Camera>(glm::vec3(light_position.x, light_position.y, light_position.z));
-		depthCamera_->LookAt(light_position + light_Dir);*/
 
 
 		std::vector<std::string>textures_faces{
@@ -158,7 +198,7 @@ namespace gl {
 		};
 
 		skybox_ = std::make_unique<CubeMap>(textures_faces);
-		modele_ = std::make_unique<Model>(path + "data/mesh_test/Winter_Girl.obj");
+		modele_ = std::make_unique<Model>(path + "data/mesh_test/flyingCreature.obj");
 		dragonEgg_ = std::make_unique<Model>(path + "data/mesh_test/egg.obj");
 		bigTree_ = std::make_unique<Model>(path + "data/mesh_test/Tree/bigTree.obj");
 		ground_ = std::make_unique<Model>(path + "data/mesh_test/Ground.obj");
@@ -166,9 +206,32 @@ namespace gl {
 		portal_ = std::make_unique<Model>(path + "data/mesh_test/portal.obj");
 		handStatue_ = std::make_unique<Model>(path + "data/mesh_test/handStatue.obj");
 		fireSphere_ = std::make_unique<Model>(path + "data/mesh_test/fireSphere.obj");
-		
-		
-		//house_ = std::make_unique<Model>(path + "data/mesh_test/House/house.obj");
+		grass_ = std::make_unique<Model>(path + "data/mesh_test/grass.obj");
+
+		grassPositions_.resize(grassNmb_);
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_real_distribution<> disX(8.0, -8.0);
+		std::uniform_real_distribution<> disZ(16.0, -16.0);
+		for (unsigned int i = 0; i < grassNmb_; ++i)
+		{
+			const float x = disX(gen);
+			const float z = disZ(gen);	
+
+			glm::vec3 position = glm::vec3(x, 0.0f, z);
+			grassPositions_[i] = position;
+		}
+		const auto& grassMesh = grass_->getMesh(0);
+		glBindVertexArray(grassMesh.GetVAO());
+		glGenBuffers(1, &instanceVBO_);
+
+		glBindBuffer(GL_ARRAY_BUFFER, instanceVBO_);
+		glEnableVertexAttribArray(6);
+		glVertexAttribPointer(6, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3),
+			(void*)0);
+		glVertexAttribDivisor(6, 1);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
 
 
 		//HDR FrameBuffer
@@ -272,8 +335,82 @@ namespace gl {
 		time_ += delta_time_;
 		light_Dir = glm::normalize(light_position - glm::vec3(0.0, 0.0, 0.0));
 
-		
-
+		cameraTimer_ += delta_time_;
+		switch (CameraPosition_)
+		{
+			case FIRST_POSITION:
+				if (!hasMoved)
+				{
+					camera_->MoveCamera(cameraPositions_[0], cameraYaws_[0], cameraPtchs_[0]);
+					hasMoved = true;
+				}
+				camera_->ProcessKeyboard(CameraMovementEnum::RIGHT, delta_time_ * 0.15f);
+			if(cameraTimer_ >8.0f)
+			{
+				cameraTimer_ = 0.0f;
+				hasMoved = false;
+				CameraPosition_ = SECOND_POSITION;
+			}
+			break;
+			case SECOND_POSITION:
+				if(!hasMoved)
+				{
+					camera_->MoveCamera(cameraPositions_[1], cameraYaws_[1], cameraPtchs_[1]);
+					hasMoved = true;
+				}
+				camera_->ProcessKeyboard(CameraMovementEnum::RIGHT, delta_time_*0.05f);
+				if (cameraTimer_ > 6.0f)
+				{
+					cameraTimer_ = 0.0f;
+					hasMoved = false;
+					CameraPosition_ = THIRD_POSITION;
+				}
+				break;
+			case THIRD_POSITION:
+				if (!hasMoved)
+				{
+					camera_->MoveCamera(cameraPositions_[2], cameraYaws_[2], cameraPtchs_[2]);
+					hasMoved = true;
+				}
+				camera_->ProcessKeyboard(CameraMovementEnum::RIGHT, delta_time_*0.05f);
+				if (cameraTimer_ > 6.0f)
+				{
+					cameraTimer_ = 0.0f;
+					hasMoved = false;
+					CameraPosition_ = FOURTH_POSITION;
+				}
+				break;
+			case FOURTH_POSITION:
+				if (!hasMoved)
+				{
+					camera_->MoveCamera(cameraPositions_[3], cameraYaws_[3], cameraPtchs_[3]);
+					hasMoved = true;
+				}
+				camera_->ProcessKeyboard(CameraMovementEnum::LEFT, delta_time_ * 0.05f);
+				if (cameraTimer_ > 6.0f)
+				{
+					cameraTimer_ = 0.0f;
+					hasMoved = false;
+					CameraPosition_ = FIFTH_POSITION;
+				}
+				break;
+			case FIFTH_POSITION:
+				if (!hasMoved)
+				{
+					camera_->MoveCamera(cameraPositions_[4], cameraYaws_[4], cameraPtchs_[4]);
+					hasMoved = true;
+				}
+				//camera_->ProcessKeyboard(CameraMovementEnum::LEFT, delta_time_ * 0.05f);
+				if (cameraTimer_ > 6.0f)
+				{
+					cameraTimer_ = 0.0f;
+					hasMoved = false;
+					CameraPosition_ = FIRST_POSITION;
+				}
+				break;
+		}
+		//std::cout << "camera positions stage = " << CameraPosition_ << "\n";
+		std::cout << "cameratimer = " << cameraTimer_ << "\n";
 		/*glm::mat4 lightProjection, lightView;
 		glm::mat4 lightSpaceMatrix;
 		lightProjection = depthCamera_->GetProjection();
@@ -351,20 +488,7 @@ namespace gl {
 
 	void HelloSkybox::RenderScene(std::unique_ptr<Shader>& Shaders)
 	{
-		/*glActiveTexture(GL_TEXTURE6);
-		Shaders->SetInt("shadowMap", 6);
-		glBindTexture(GL_TEXTURE_2D, depthMap);*/
-
-		/*modelMatrix_ = glm::mat4(1.0f);
-		modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(0.0f, 0.0f, -5.0f));
-		modelMatrix_ = glm::scale(modelMatrix_, glm::vec3(3.0f, 3.0f, 3.0f));
-		modelMatrix_ = glm::rotate(modelMatrix_, glm::radians(90.0f), glm::vec3(0.f, 1.f, 0.f));
-		inv_model_= glm::transpose(glm::inverse(modelMatrix_));
-		Shaders->SetMat4("model", modelMatrix_);
-		Shaders->SetMat4("inv_model", inv_model_);
-		modele_->Draw(Shaders);*/
-
-
+		
 		modelMatrix_ = glm::mat4(1.0f);
 		modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(-1.0f, 0.0f, -30.0f));
 		modelMatrix_ = glm::rotate(modelMatrix_, glm::radians(90.0f), glm::vec3(0.f, 1.f, 0.f));
@@ -374,14 +498,14 @@ namespace gl {
 		Shaders->SetMat4("inv_model", inv_model_);
 		bigTree_->Draw(Shaders);
 
-		//modelMatrix_ = glm::mat4(1.0f);
-		//modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(0.0f, 2.0f, -15.0f));
-		////modelMatrix_ = glm::rotate(modelMatrix_, glm::radians(90.0f), glm::vec3(0.f, 1.f, 0.f));
-		//modelMatrix_ = glm::scale(modelMatrix_, glm::vec3(4.0f, 4.0f, 4.0f));
-		//inv_model_ = glm::transpose(glm::inverse(modelMatrix_));
-		//Shaders->SetMat4("model", modelMatrix_);
-		//Shaders->SetMat4("inv_model", inv_model_);
-		//rock_->Draw(Shaders);
+		modelMatrix_ = glm::mat4(1.0f);
+		modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(0.0f, 2.0f, -15.0f));
+		//modelMatrix_ = glm::rotate(modelMatrix_, glm::radians(90.0f), glm::vec3(0.f, 1.f, 0.f));
+		modelMatrix_ = glm::scale(modelMatrix_, glm::vec3(4.0f, 4.0f, 4.0f));
+		inv_model_ = glm::transpose(glm::inverse(modelMatrix_));
+		Shaders->SetMat4("model", modelMatrix_);
+		Shaders->SetMat4("inv_model", inv_model_);
+		rock_->Draw(Shaders);
 
 		modelMatrix_ = glm::mat4(1.0f);
 		modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(0.0f, 0.0f, 18.0f));
@@ -415,7 +539,6 @@ namespace gl {
 
 		modelMatrix_ = glm::mat4(1.0f);
 		modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(0.0f, 1.75f, 23.0f));
-		//modelMatrix_ = glm::rotate(modelMatrix_, glm::radians(90.0f), glm::vec3(0.f, 1.f, 0.f));
 		modelMatrix_ = glm::scale(modelMatrix_, glm::vec3(1.5, 1.5f, 1.5f));
 		inv_model_ = glm::transpose(glm::inverse(modelMatrix_));
 		Shaders->SetMat4("model", modelMatrix_);
@@ -424,13 +547,59 @@ namespace gl {
 
 		modelMatrix_ = glm::mat4(1.0f);
 		modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(0.0f, -0.1f, 0.0f));
-		//modelMatrix_ = glm::rotate(modelMatrix_, glm::radians(90.0f), glm::vec3(0.f, 1.f, 0.f));
-		modelMatrix_ = glm::scale(modelMatrix_, glm::vec3(1, 1.5f, 1.5f));
+		modelMatrix_ = glm::scale(modelMatrix_, glm::vec3(1.25, 1.75f, 1.75f));
 		inv_model_ = glm::transpose(glm::inverse(modelMatrix_));
 		Shaders->SetMat4("model", modelMatrix_);
 		Shaders->SetMat4("inv_model", inv_model_);
 		ground_->Draw(Shaders);
+		
+		for (unsigned int i = 0; i < grass_->meshes.size(); i++)
+		{
+			const auto& wallMesh = grass_->getMesh(i);
+			wallMesh.BindTextures(Shaders);
+			modelMatrix_ = glm::mat4(1.0f);
+			modelMatrix_ = glm::scale(modelMatrix_, glm::vec3(3.5, 3.5f, 3.5f));
+			Shaders->SetMat4("view", view_);
+			Shaders->SetMat4("projection", projection_);
+			Shaders->SetMat4("model", modelMatrix_);
+			Shaders->SetMat4("inv_model", inv_model_);
+			for (std::size_t chunk = 0; chunk < grassNmb_ / instanceChunkSize_ + 1; chunk++)
+			{
+				const std::size_t chunkBeginIndex = chunk * instanceChunkSize_;
+				const std::size_t chunkEndIndex = std::min(grassNmb_,
+					static_cast<unsigned long>(chunk + 1) *
+					instanceChunkSize_);
 
+				if (chunkEndIndex > chunkBeginIndex)
+				{
+					const size_t chunkSize = chunkEndIndex - chunkBeginIndex;
+					{
+						glBindBuffer(GL_ARRAY_BUFFER, instanceVBO_);
+						glBufferData(GL_ARRAY_BUFFER,
+							sizeof(glm::vec3) * chunkSize,
+							&grassPositions_[chunkBeginIndex],
+							GL_DYNAMIC_DRAW);
+						glBindBuffer(GL_ARRAY_BUFFER, 0);
+					}
+					glBindVertexArray(wallMesh.GetVAO());
+					glDrawElementsInstanced(GL_TRIANGLES,
+						wallMesh.indices_.size(),
+						GL_UNSIGNED_INT, 0,
+						chunkSize);
+					glBindVertexArray(0);
+				}
+			}
+		}
+
+		modelMatrix_ = glm::mat4(1.0f);
+		modelMatrix_ = glm::translate(modelMatrix_, glm::vec3(-7.0f, 8.f, 23.0f));
+		modelMatrix_ = glm::rotate(modelMatrix_, glm::radians(45.0f), glm::vec3(-1.f, 0.f, 0.f));
+		modelMatrix_ = glm::scale(modelMatrix_, glm::vec3(7.f, 7.f, 7.f));
+		inv_model_ = glm::transpose(glm::inverse(modelMatrix_));
+		Shaders->SetMat4("model", modelMatrix_);
+		Shaders->SetMat4("inv_model", inv_model_);
+		modele_->Draw(Shaders);
+		
 		skybox_->Draw(skyboxShaders_, view_, projection_, camera_);
 	}
 

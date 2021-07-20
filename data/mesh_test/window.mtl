@@ -1,0 +1,26 @@
+# Blender MTL File: 'None'
+# Material Count: 2
+
+newmtl Glass
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd window\\Glass_albedo.jpg
+map_Bump window\\Glass_normal.png
+
+newmtl Window
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.219608 0.086275 0.019608
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd window\\Window_albedo.jpg
+map_Bump window\\Window_normal.png

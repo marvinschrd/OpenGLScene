@@ -1,0 +1,150 @@
+# Blender MTL File: 'None'
+# Material Count: 12
+
+newmtl Merged_low_10
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.611765 0.521569 0.980392
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd flyingCreature\\Merged_low_10_albedo.jpeg
+map_Ks flyingCreature\\Merged_low_10_roughness.jpeg
+map_Bump flyingCreature\\Merged_low_10_normal.png
+
+newmtl Merged_low_11
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.819608 0.521569 0.980392
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl Merged_low_110
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.925490 0.945098 0.556863
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd flyingCreature\\Merged_low_110_albedo.jpeg
+map_Ks flyingCreature\\Merged_low_110_roughness.jpeg
+map_Bump flyingCreature\\Merged_low_110_normal.png
+
+newmtl Merged_low_111
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.945098 0.733333 0.556863
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd flyingCreature\\Merged_low_111_albedo.jpeg
+map_Ks flyingCreature\\Merged_low_111_roughness.jpeg
+map_Bump flyingCreature\\Merged_low_111_normal.png
+
+newmtl Merged_low_12
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.890196 0.521569 0.980392
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl Merged_low_13
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.960784 0.521569 0.980392
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd flyingCreature\\Merged_low_13_albedo.png
+map_Ks flyingCreature\\Merged_low_13_roughness.jpeg
+map_Bump flyingCreature\\Merged_low_13_normal.png
+
+newmtl Merged_low_14
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.980392 0.521569 0.866667
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+ap_Kd flyingCreature\\Merged_low_14_albedo.jpeg
+map_Ks flyingCreature\\Merged_low_14_roughness.jpeg
+map_Bump flyingCreature\\Merged_low_14_normal.png
+
+newmtl Merged_low_15
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.980392 0.521569 0.729412
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd flyingCreature\\Merged_low_15_albedo.jpeg
+map_Ks flyingCreature\\Merged_low_15_roughness.jpeg
+map_Bump flyingCreature\\Merged_low_15_normal.png
+
+newmtl Merged_low_16
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.980392 0.521569 0.658824
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd flyingCreature\\Merged_low_16_albedo.jpeg
+map_Ks flyingCreature\\Merged_low_16_roughness.jpeg
+map_Bump flyingCreature\\Merged_low_16_normal.png
+
+newmtl Merged_low_17
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.980392 0.521569 0.588235
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl Merged_low_18
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.980392 0.521569 0.521569
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl Merged_low_19
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.607843 0.513726 0.988235
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd flyingCreature\\Merged_low_19_albedo.jpeg
+map_Ks flyingCreature\\Merged_low_19_roughness.jpeg
+map_Bump flyingCreature\\Merged_low_19_normal.png
