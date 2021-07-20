@@ -74,21 +74,7 @@ namespace gl
 			GL_FALSE,
 			sizeof(Vertex),
 			(GLvoid*)offsetof(Vertex, tangent));
-		
-		
-		////tangents
-		//glVertexAttribPointer(
-		//	5,
-		//	3,
-		//	GL_FLOAT,
-		//	GL_FALSE,
-		//	8 * sizeof(float),
-		//	(GLvoid*)vertex_tangent_offset);
-		//IsError(__FILE__, __LINE__);
-		
-		/*glEnableVertexAttribArray(5);
-		IsError(__FILE__, __LINE__);*/
-		IsError(__FILE__, __LINE__);
+	
 		CheckError(__FILE__, __LINE__);
 		
 		// EBO.
@@ -147,10 +133,7 @@ namespace gl
 				//std::cout << " emission texture found" << "\n";
 				number = std::to_string(emissionNumber++);
 			}
-
-			//shader->SetFloat(("material." + name + number).c_str(), i);
-
-			//glUniform1i(glGetUniformLocation(shader->id, (name + number).c_str()), i);
+			
 			shader->SetInt((name + number).c_str(), i);
 			glBindTexture(GL_TEXTURE_2D, textures_[i].ID);
 			CheckError(__FILE__, __LINE__);

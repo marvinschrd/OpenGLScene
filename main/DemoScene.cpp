@@ -95,9 +95,7 @@ namespace gl {
 		unsigned int rboDepth = 0;
 
 		//instanced grass
-		const unsigned long maxGrassNmb_ = 100'000;
-		const unsigned long minGrassNmb_ = 1'000;
-		unsigned long instanceChunkSize_ = 1'000;
+		unsigned long instanceChunkSize_ = 250;
 		unsigned long grassNmb_ = 250;
 		std::vector<glm::vec3> grassPositions_;
 		unsigned int instanceVBO_ = 0;
@@ -371,8 +369,8 @@ namespace gl {
 		grassPositions_.resize(grassNmb_);
 		std::random_device rd;
 		std::mt19937 gen(rd());
-		std::uniform_real_distribution<> disX(8.0, -8.0);
-		std::uniform_real_distribution<> disZ(16.0, -16.0);
+		std::uniform_real_distribution<float> disX(-8.0f, 8.0f);
+		std::uniform_real_distribution<float> disZ(-16.0f, 16.0f);
 		for (unsigned int i = 0; i < grassNmb_; ++i)
 		{
 			const float x = disX(gen);
@@ -633,7 +631,7 @@ namespace gl {
 		{
 			if (event.key.keysym.sym == SDLK_ESCAPE)
 				exit(0);
-			if (event.key.keysym.sym == SDLK_w)
+			/*if (event.key.keysym.sym == SDLK_w)
 			{
 				camera_->ProcessKeyboard(CameraMovementEnum::FORWARD, delta_time_);
 			}
@@ -648,52 +646,52 @@ namespace gl {
 			if (event.key.keysym.sym == SDLK_d)
 			{
 				camera_->ProcessKeyboard(CameraMovementEnum::RIGHT, delta_time_);
-			}
-
-			/*if(event.key.keysym.sym == SDLK_m)
-			{
-				camera_->MoveCamera(glm::vec3(0.0,40.0,0.0), -90,-89.0f);
 			}*/
+
+			///*if(event.key.keysym.sym == SDLK_m)
+			//{
+			//	camera_->MoveCamera(glm::vec3(0.0,40.0,0.0), -90,-89.0f);
+			//}*/
 		}
 
-		if (event.type == SDL_MOUSEMOTION)
-		{
-			int x;
-			int y;
-			SDL_GetMouseState(&x, &y);
+	//	if (event.type == SDL_MOUSEMOTION)
+	//	{
+	//		int x;
+	//		int y;
+	//		SDL_GetMouseState(&x, &y);
 
-			if (firstMouse)
-			{
-				lastX = x;
-				lastY = y;
-				firstMouse = false;
-			}
+	//		if (firstMouse)
+	//		{
+	//			lastX = x;
+	//			lastY = y;
+	//			firstMouse = false;
+	//		}
 
-			//std::cout << "x mouse offset = " << x << "\n";
+	//	//	//std::cout << "x mouse offset = " << x << "\n";
 
-			float currX = event.motion.x;
-			float currY = event.motion.y;
+	//		float currX = event.motion.x;
+	//		float currY = event.motion.y;
 
-			/*float xOffset = x - lastX;
-			float yOffset = lastY - y;*/
+	//		/*float xOffset = x - lastX;
+	//		float yOffset = lastY - y;*/
 
-			float xOffset = currX - lastX;
-			float yOffset = lastY - currY;
+	//		float xOffset = currX - lastX;
+	//		float yOffset = lastY - currY;
 
-			lastX = currX;
-			lastY = currY;
+	//		lastX = currX;
+	//		lastY = currY;
 
-			camera_->ProcessMouseMovement(xOffset, yOffset, time_);
-		}
+	//		camera_->ProcessMouseMovement(xOffset, yOffset, time_);
+	//	}
 
-		if (event.type == SDL_MOUSEWHEEL)
-		{
-			fov_ -= event.wheel.y;
-			if (fov_ < 1.0f)
-				fov_ = 1.0f;
-			if (fov_ > 45.0f)
-				fov_ = 45.0f;
-		}
+	//	if (event.type == SDL_MOUSEWHEEL)
+	//	{
+	//		fov_ -= event.wheel.y;
+	//		if (fov_ < 1.0f)
+	//			fov_ = 1.0f;
+	//		if (fov_ > 45.0f)
+	//			fov_ = 45.0f;
+	//	}
 	}
 
 	void Demo::DrawImGui()

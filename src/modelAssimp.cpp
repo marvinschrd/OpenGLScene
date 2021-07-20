@@ -21,10 +21,6 @@ namespace gl
 		ProcessNode(scene->mRootNode, scene);
 		CheckError(__FILE__, __LINE__);
 
-		/*diffuseShader_ = std::make_unique<Shader>(
-			std::string("../data/shaders/meshShader.vert"),
-			std::string("../data/shaders/meshShader.frag")
-			);*/
 	}
 
 	void Model::ProcessNode(aiNode* node, const aiScene* scene)
@@ -51,7 +47,6 @@ namespace gl
 		//vertex
 		for(unsigned int i = 0; i < mesh->mNumVertices; ++i)
 		{
-		//	std::cout << "vertice number : " << i << "\n";
 			Vertex vertex;
 			glm::vec3 positions;
 			glm::vec3 normals;

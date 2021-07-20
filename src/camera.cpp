@@ -22,9 +22,6 @@ namespace gl
 		xoffset *= MouseSensitivity;
 		yoffset *= MouseSensitivity;
 
-		/*xoffset *= Velocity;
-		yoffset *= Velocity;*/
-
 		yaw += xoffset;
 		pitch += yoffset;
 
