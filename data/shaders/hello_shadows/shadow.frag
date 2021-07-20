@@ -39,7 +39,6 @@ float ShadowCalculations(vec4 fragPosLightSpace)
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // check whether current frag pos is in shadow
-    //float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
 
     //PCF
     float shadow = 0.0;
@@ -76,9 +75,6 @@ vec3 calculateDiractionalLight(vec3 normal, vec3 viewDir, float shadow)
     float spec = pow(max(dot(normal, halfWayDir), 0.0), specular_pow);
     vec3 specular = specular_strength * spec * light_color;
 
-    //emission light
-//    vec3 emission = texture(texture_emission1, out_tex).rgb;
-
     vec3 result = (ambient +(1.0-shadow) * (diffuse + specular)) * color;
 
     vec3 result_specular =
@@ -96,7 +92,6 @@ vec3 CalculatePointLight(vec3 normal, vec3 out_position, vec3 viewDir, float sha
     vec3 ambient = ambient_strengh * color * light_color2;
 
     vec3 light_direction = normalize(tangentLightPos - tangentFragPos);
-    //vec3 light_direction = tangentLightPos;
     float diff = max(dot(normal, light_direction), 0.0);
     vec3 diffuse = diff * light_color2;
 
@@ -114,9 +109,6 @@ vec3 CalculatePointLight(vec3 normal, vec3 out_position, vec3 viewDir, float sha
     ambient  *= attenuation;  
     diffuse   *= attenuation;
     specular *= attenuation; 
-
-//    float distance = length(out_position - pointLight_Position);
-//    diffuse *= 1.0 / (distance * distance);
 
     //emission light
     vec3 emission = texture(texture_emission1, out_tex).rgb;
@@ -138,33 +130,9 @@ void main()
     vec3 viewDir = normalize(tangentViewPos - tangentFragPos);
     float shadow  = ShadowCalculations(fragPosLightSpace);
 
-//    vec3 color = texture(texture_diffuse1,out_tex).rgb;
-//    // Compute ambiant light.
-//    //vec3 ambient = ambient_strengh * light_color;
-//     vec3 ambient = ambient_strengh * color;
-//
-//    // Compute diffuse light
-//
-//    vec3 light_direction = tangentLightDirection;
-//    float diff = max(dot(normal, light_direction), 0.0);
-//    vec3 diffuse = diff * light_color;
-//    
-//    // Compute specular light.
-//    vec3 reflection_direction = reflect(-light_direction,normal);
-//    vec3 halfWayDir = normalize(light_direction + viewDir);
-//    float spec = pow(max(dot(normal, halfWayDir), 0.0), specular_pow);
-//    vec3 specular = specular_strength * spec * light_color2;
-
     vec3 result = calculateDiractionalLight(normal,viewDir,shadow);
     result += CalculatePointLight(normal,out_position,viewDir,shadow);
 
-    // Final lighting.
-//    vec3 result_diffuse_ambient = 
-//        (ambient + diffuse + specular) * texture(texture_diffuse1, out_tex).rgb; 
-//     vec3 result_specular =
-//        specular * texture(texture_specular1, out_tex).r;
-//    vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;
-   
-   // FragColor = vec4(lighting + result_specular, texture(texture_diffuse1, out_tex).a);
+   // Final lighting.
    FragColor = vec4(result, texture(texture_diffuse1, out_tex).a);
 }

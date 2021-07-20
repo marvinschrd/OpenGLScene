@@ -39,7 +39,6 @@ mat4 translate(vec3 v)
 
 void main()
 {
-//    vec3 lightPosition = vec3(0.0, 4.0, 25.0);
     out_position = vec3(model * vec4(aPos, 1.0));
     pointLight_Position = pointLightPosition;
 
@@ -53,19 +52,14 @@ void main()
     vec3 B = normalize(cross(N,T));
     mat3 TBN = transpose(mat3(T,B,N));
 
-   // tangentLightPos = TBN * light_position;
     tangentFragPos = TBN * out_position;
     tangentViewPos = TBN * cameraPosition;
-    //vec3 lightDirection = normalize(lightPosition - vec3(0,0,0));
-   // vec3 lightDirection = normalize(lightPosition - aPos);
     tangentLightDirection = TBN * lightDirection;
     tangentLightPos = TBN * pointLightPosition;
-
 
     mat4 pvm = projection * view * model;
     gl_Position = pvm * translate(instanceMatrix) * vec4(aPos, 1.0);
     out_tex = aTex;
     out_normal = vec3(inv_model * vec4(N, 1.0));
     fragPosLightSpace = lightSpaceMatrix * vec4(out_position, 1.0);
-    
 }
