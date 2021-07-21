@@ -98,6 +98,7 @@ namespace gl {
 		unsigned long instanceChunkSize_ = 250;
 		unsigned long grassNmb_ = 250;
 		std::vector<glm::vec3> grassPositions_;
+		std::vector<glm::vec3> sortedGrass_;
 		unsigned int instanceVBO_ = 0;
 
 		//Camera position movement
@@ -289,7 +290,7 @@ namespace gl {
 						glBindBuffer(GL_ARRAY_BUFFER, instanceVBO_);
 						glBufferData(GL_ARRAY_BUFFER,
 							sizeof(glm::vec3) * chunkSize,
-							&grassPositions_[chunkBeginIndex],
+							&sortedGrass_[chunkBeginIndex],
 							GL_DYNAMIC_DRAW);
 						glBindBuffer(GL_ARRAY_BUFFER, 0);
 					}
@@ -379,6 +380,16 @@ namespace gl {
 			glm::vec3 position = glm::vec3(x, 0.0f, z);
 			grassPositions_[i] = position;
 		}
+
+		sortedGrass_ = grassPositions_;
+		std::ranges::sort(sortedGrass_,
+			[this](const glm::vec3& v1, const glm::vec3& v2)
+			{
+				const auto d1 = (v1 - camera_->position);
+				const auto d2 = (v2 - camera_->position);
+				return glm::dot(d1, d1) > glm::dot(d2, d2);
+			});
+		
 		const auto& grassMesh = grass_->getMesh(0);
 		glBindVertexArray(grassMesh.GetVAO());
 		glGenBuffers(1, &instanceVBO_);
